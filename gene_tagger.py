@@ -7,7 +7,6 @@ import os
 from subprocess import call
 import logging
 
-
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 parser=argparse.ArgumentParser()
@@ -60,7 +59,6 @@ def tagging(input_dir, output_dir, index_id, index_text_to_tag):
             list_files.write(os.path.basename(file)+"\n")
             list_files.flush()
     
-
 def process(input_file, output_dir, index_id, index_text_to_tag):
     logging.info("Tagging intup file  : " + input_file + " ,  output directory : "  + output_dir)
     total_articles_errors = 0
@@ -93,7 +91,6 @@ def process(input_file, output_dir, index_id, index_text_to_tag):
     call_gene_tagger(internal_folder, output_dir)
     logging.info("Tagging  Finish For " + input_file + ".  output file : "  + output_file + ", articles with error : " + str(total_articles_errors))    
         
-
 
 def call_gene_tagger(input_folder, output_file):
     gnormPlus_exe_path = "GNormPlus.jar"
