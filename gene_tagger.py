@@ -55,9 +55,10 @@ def tagging(input_dir, output_dir, index_id, index_text_to_tag):
     #first standardization to all
     with open(output_dir+"/list_files_processed.dat",'a') as list_files:    
         for file in onlyfiles_toprocess:    
-            process(file, output_dir, index_id, index_text_to_tag)
-            list_files.write(os.path.basename(file)+"\n")
-            list_files.flush()
+            ret = process(file, output_dir, index_id, index_text_to_tag)
+            if(ret==0):
+                list_files.write(os.path.basename(file)+"\n")
+                list_files.flush()
     
 def process(input_file, output_dir, index_id, index_text_to_tag):
     logging.info("Tagging intup file  : " + input_file + " ,  output directory : "  + output_dir)
@@ -88,14 +89,16 @@ def process(input_file, output_dir, index_id, index_text_to_tag):
                     logging.debug( "Full Line :  " + line)
                     logging.error("The cause probably: contained an invalid character ")
                     total_articles_errors = total_articles_errors + 1
-    call_gene_tagger(internal_folder, output_dir)
+    ret = call_gene_tagger(internal_folder, output_dir)
     logging.info("Tagging  Finish For " + input_file + ".  output file : "  + output_file + ", articles with error : " + str(total_articles_errors))    
-        
+    return ret    
 
 def call_gene_tagger(input_folder, output_file):
     gnormPlus_exe_path = "GNormPlus.jar"
     setup_path = "setup.txt" 
-    resp = call(["java", "-Xmx10G", "-Xms10G", "-jar", gnormPlus_exe_path, input_folder, output_file , setup_path])
+    resp = call(["java", "-Xmx15g", "-Xms15g", "-jar", gnormPlus_exe_path, input_folder, output_file , setup_path])
     if(resp==1):
         logging.error("GNormPlus error, Tagging input folder  : " + input_folder + ".  output file : "  + output_file)
+        return 1
+    return 0
     
